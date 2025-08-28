@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Classificador de Sentimentos</title>
+    <style>
+        body {
+            background-color: #001f3f;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        textarea {
+            width: 60%;
+            max-width: 600px;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 6px;
+            border: 4px solid transparent;
+            background-image:
+                linear-gradient(white, white),
+                linear-gradient(135deg, #008aff, #86d472);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            resize: none;
+            color: black;
+        }
+
+
+        .bn39 {
+            background-image: linear-gradient(135deg, #008aff, #86d472);
+            border-radius: 6px;
+            box-sizing: border-box;
+            color: #ffffff;
+            display: block;
+            height: 50px;
+            font-size: 1.4em;
+            font-weight: 600;
+            padding: 4px;
+            position: relative;
+            text-decoration: none;
+            width: 7em;
+            z-index: 2;
+            margin-top: 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .bn39:hover {
+            color: #fff;
+        }
+
+        .bn39 .bn39span {
+            align-items: center;
+            background: #0e0e10;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            height: 100%;
+            transition: background 0.5s ease;
+            width: 100%;
+        }
+
+        .bn39:hover .bn39span {
+            background: transparent;
+        }
+
+        .result-box {
+            margin-top: 40px;
+        }
+
+        .explanation-box {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Análise de Sentimento</h1>
+    <form method="post">
+        <textarea name="user_input" rows="5" placeholder="Digite um texto..."></textarea><br>
+        <button class="bn39" type="submit"><span class="bn39span">Analisar</span></button>
+    </form>
+
+    {% if result %}
+    <div class="result-box">
+        <h2>Resultado:</h2>
+        <p><strong>Sentimento:</strong> {{ result.label }}</p>
+        <p><strong>Confiança:</strong> {{ '%.2f' | format(result.score * 100) }}%</p>
+        <div class="explanation-box" style="background-color: {{ result.color }}; color: {% if result.color == 'white' %}black{% else %}white{% endif %};">
+            {{ result.explanation }}
+        </div>
+        <p style="margin-top: 15px;"><strong>Sugestão:</strong> {{ result.suggestion }}</p>
+    </div>
+    {% endif %}
+
+    {% if history %}
+        <h3 style="margin-top:40px;">Histórico recente:</h3>
+        <ul>
+            {% for item in history %}
+                <li><strong>{{ item.sentimento }}</strong> ({{ item.confiança }}) - "{{ item.texto[:50] }}..."</li>
+            {% endfor %}
+        </ul>
+        <div style="margin-top: 20px;">
+            <a href="/export/csv" style="color:white;">📥 Baixar CSV</a> |
+            <a href="/export/pdf" style="color:white;">📄 Baixar PDF</a>
+        </div>
+    {% endif %}
+
+
+</body>
+</html>
+
+
